@@ -628,3 +628,40 @@ If the :abbr:`PA (Public Administration)` business doesn't reply within 15 days,
 the :abbr:`PA (Public Administration)` business directly, sending them both the invoice and the
 received deadline notification by email. You can make an arrangement with them and manually set the
 correct :guilabel:`SdI State` on your invoice.
+
+Point of Sale in Italy: Fiscal printer
+======================================
+
+Starting with Odoo 18.0, we introduced the support for Italian fiscal printers for your point of
+sale.
+These printers often come with the default setting to use HTTP. In order for such a printer to work
+with Odoo, that setting has to be changed to enable the printer to support HTTPS.
+
+EPSON FP90-III
+--------------
+
+To setup this printer, you will need the configuration software EpsonFPWizard or the keyboard
+connected to the printer. With the keyboard, you will then need to perform the following:
+
+#. Make sure you are on the default state of your fiscal printer
+#. Type **3333**
+#. Press **Chiave**
+#. Type **34**
+#. Press **Contante** until the screen displays **SSL**
+#. Press X to turn the value **0** into a **1**
+#. Press **Contante** 3 times to confirm
+#. Press **Chiave**
+
+After these steps are completed, you need to log in to the printer with the device that runs the
+:ref:`point of sale <sales/point_of_sale>` so it recognises your printer's certificate.
+
+#. Navigate to your printer by typing `https://<ip-of-your-printer>` in a web browser search bar. You
+will be presented with a security prompt.
+#. Click **advanced**
+#. Click **proceed**
+
+Once this is done, make sure your :ref:`point of sale <sales/point_of_sale>` is configured to work
+with the fiscal printer. Navigate to
+:menuselection:`Point of Sale --> Configuration --> Settings`.
+Scroll down to the section **Connected Devices**, type in the IP address of your printer and enable
+**Use HTTPS**.

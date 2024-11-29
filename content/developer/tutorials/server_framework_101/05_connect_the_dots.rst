@@ -24,7 +24,7 @@ when some values are derived from other fields. Fortunately, the server framewor
 ability to define **computed fields**.
 
 Computed fields are a special type of field whose value are derived through programmatic computation
-rather than stored directly in the database. The servers computes these values on the fly whenever
+rather than stored directly in the database. The server computes these values on the fly whenever
 the field is accessed. This makes computed fields highly convenient for tasks such as displaying
 calculation results in views, automating repetitive processes, or assisting users during data entry.
 
@@ -37,7 +37,6 @@ the records to compute and set the field's value for each one.
    - :ref:`Reference documentation for computed fields <reference/fields/compute>`
    - :ref:`Reference documentation for recordsets <reference/orm/recordsets>`
 
-.. todo: reference doc on recordsets
 .. todo: compute: offer deadline
 .. todo: For relational fields, it’s possible to use paths through a field as a dependency: @api.depends('partner_id.name')
 .. todo: methods are private by default, meaning that they can't be called from the presentation
@@ -206,52 +205,67 @@ the constraint is violated.
 Set default field values
 ========================
 
-.. todo: introduce lambda functions and fields.Date.today for defaults :point_down:
-   also mention that `self` is evaluated as the current recordset in lambda functions
+When creating new records, pre-filling certain fields with default values can simplify data entry
+and reduces the likelihood of errors. Defaults are particularly useful when values are derived from
+the system or context, such as the current date, time, or logged-in user.
 
-There is a problem with the way we defined our `Date` fields in the previous chapters: their default value relies on
-:code:`fields.Date.today()` or some other static method. When the code is loaded into memory, the date is
-computed once and reused for all newly created records until the server is shut down. You probably didn't
-notice it, unless you kept your server running for several days, but it would be much more visible with
-`Datetime` fields, as all newly created records would share the same timestamp.
-
-That's where lambda functions come in handy. As they generate an anonymous function each time they're evaluated
-at runtime, they can be used in the computation of default field values to return an updated value for each new record.
+Fields can be assigned a default value by including the `default` argument in their declaration.
+This argument can be set to a static value or dynamically generated using a callable function, such
+as a model method or a lambda function. In both cases, the `self` argument provides access to the
+environment but does not represent the current record, as no record exists yet during the creation
+process.
 
 .. todo: salesperson_id = fields.Many2one(default=lambda self: self.env.user)
+.. todo: availability_date = fields.Date(default=lambda self: date_utils.add(fields.Date.today(), months=2))
 .. todo: real.estate.offer.amount::default -> property.selling_price (add related?)
 .. todo: real.estate.tag.color -> default=_default_color ;  def _default_color(self): return random.randint(1, 11)  (check if lambda works)
 .. todo: copy=False on some fields
 
-.. _tutorials/server_framework_101/actions:
+.. _tutorials/server_framework_101/action_buttons:
 
 Trigger business workflows
 ==========================
+
+**Action buttons** allow users to trigger specific workflows directly from the user interface. These
+buttons can be of type **action**, defined in XML, or **object**, implemented in the model.
+Together, these types of buttons facilitate the integration of user interactions with business
+logic.
 
 .. todo: "assign myself as salesperson" action
 .. todo: "view best offer" statbutton
 .. todo: accept/refuse offer buttons
 .. todo: action name=...
 
-tmp
+.. _tutorials/server_framework_101/action_type_actions:
 
-.. _tutorials/server_framework_101/action_object:
+XML-defined actions
+-------------------
 
-Object
-------
+Action-type buttons link to actions defined in XML and are typically used to display specific views
+or trigger server actions. These buttons allow developers to link workflows to the UI without
+writing Python code, making them ideal for simple, preconfigured tasks.
 
-.. todo: change section title
+We already saw :ref:`how to link XML-defined window actions to menu items
+<tutorials/server_framework_101/define_window_actions>`. To link a button to an XML-defined action,
+a `button` element must be added to the view, with its `type` attribute set to `action`. The `name`
+attribute should reference the XML ID of the action to execute.
 
-tmp
+.. todo: ref to `reference/view_architectures/form/button`
+.. todo: ref to `reference/view_architectures/form/header`
 
-.. _tutorials/server_framework_101/action_name:
+.. _tutorials/server_framework_101/object_type_actions:
 
-Name
-----
+Model-defined actions
+---------------------
 
-.. todo: change section title
+Object-type buttons link to model methods that execute custom business logic. These methods enable
+more complex workflows, such as processing the current records, configuring actions depending on
+these records, or integrating with external systems.
 
-tmp
+To link a button to a model-defined action, its `type` attribute must be set to `object`, and its
+`name` attribute must be set to the name of the model method to call when the button is clicked. The
+method receives the current recordset through `self` and should return a dictionary acting as an
+action descriptor.
 
 .. _tutorials/server_framework_101/shell:
 
@@ -259,6 +273,8 @@ Use the interactive shell
 =========================
 
 tmp
+
+.. todo: talk about env.cr.commit()
 
 ----
 

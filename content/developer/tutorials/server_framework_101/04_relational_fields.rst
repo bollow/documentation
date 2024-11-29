@@ -646,6 +646,11 @@ to a list of offers received from potential buyers.
    #. Allow connecting properties to multiple offers.
    #. Modify the form view of properties to display offers in a new notebook page titled "Offers".
 
+   .. tip::
+      The `default` field argument expects a callable function, not a precalculated value. If you
+      mistakenly pass the result of calling the `fields.Date.today` helper function, the field's
+      default value will be set to the server's start-up time, not the correct date at runtime.
+
 .. spoiler:: Solution
 
    .. code-block:: python
@@ -660,7 +665,7 @@ to a list of offers received from potential buyers.
 
           amount = fields.Float(string="Amount", required=True)
           buyer_id = fields.Many2one(string="Buyer", comodel_name='res.partner', required=True)
-          date = fields.Date(string="Date", required=True, default=fields.Date.today())
+          date = fields.Date(string="Date", required=True, default=fields.Date.today)
           validity = fields.Integer(
               string="Validity", help="The number of days before the offer expires.", default=7
           )

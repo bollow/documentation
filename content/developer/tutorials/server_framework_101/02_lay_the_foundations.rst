@@ -65,8 +65,8 @@ classes, fields are defined as class attributes. Each field is an instance of a 
 `odoo.fields` package. For example, `Char`, `Float`, `Boolean`, each designed to handle different
 types of data. When defining a field, developers can pass various arguments to finely control how
 data is handled and presented in Odoo. For example, `string` defines the label for the field in the
-user interface, `help` provides a tooltip  when hovering the field in the user interface, and
-`required` makes filling in the field mandatory.
+user interface, `help` provides a tooltip  when hovering the field in the user interface, `required`
+makes filling in the field mandatory, and `default` provides a default field value.
 
 Individual data entries are called **records**. They are based on the structure defined by models
 and contain the actual data for each field specified in the model. In Python, records are
@@ -140,7 +140,7 @@ create a model with some fields to represent real estate properties and their ch
       - Type (house, apartment, office building, retail space, or warehouse; required; default to
         house)
       - Selling Price (without currency; with help text; required)
-      - Availability Date (default to creation date + two months)
+      - Availability Date
       - Floor Area (in square meters; with help text)
       - Number of Bedrooms (default to two)
       - Whether there is a garden
@@ -163,7 +163,6 @@ create a model with some fields to represent real estate properties and their ch
       :caption: `real_estate_property.py`
 
       from odoo import fields, models
-      from odoo.tools import date_utils
 
 
       class RealEstateProperty(models.Model):
@@ -200,9 +199,7 @@ create a model with some fields to represent real estate properties and their ch
           selling_price = fields.Float(
               string="Selling Price", help="The selling price excluding taxes.", required=True
           )
-          availability_date = fields.Date(
-              string="Availability Date", default=date_utils.add(fields.Date.today(), months=2)
-          )
+          availability_date = fields.Date(string="Availability Date")
           floor_area = fields.Integer(
               string="Floor Area", help="The floor area in square meters excluding the garden."
           )

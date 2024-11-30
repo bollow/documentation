@@ -781,7 +781,7 @@ First, open the Odoo configuration file (`odoo.conf` or `odoorc` (hidden file)).
       Depending on how Odoo is installed on the Linux machine, the configuration file is located in
       one of two different places:
 
-      - Package installation: `/etc/odoo.conf`
+      - Package installation: `/etc/odoo/odoo.conf`
       - Source installation: `~/.odoorc`
 
 Change old password
